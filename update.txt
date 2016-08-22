@@ -1,2 +1,2 @@
 wsltLastVersion=v0.0.0.1
-wsltDownloadUrl=
+wsltDownloadUrl=https://github.com/DeicPro/WSLT/blob/master/wslt.sh
