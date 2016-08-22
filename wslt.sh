@@ -1,6 +1,6 @@
 #!/bin/bash
 #WSL Tools
-wsltVersion="v0.0.0.2"
+wsltVersion="v0.0.0.1"
 
 #CONFIG
 wsltConfig(){
