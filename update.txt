@@ -1,2 +1,2 @@
-wsltLastVersion=v0.0.0.1
-wsltDownloadUrl=https://github.com/DeicPro/WSLT/blob/master/wslt.sh
+wsltLastVersion="v0.0.0.2"
+wsltDownloadUrl="https://raw.githubusercontent.com/DeicPro/WSLT/master/wslt.sh"
