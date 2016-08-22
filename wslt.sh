@@ -6,7 +6,7 @@ wsltVersion="v0.0.0.1"
 wsltConfig(){
     #UPDATE
     echo "$wsltCheckUpdate..."
-    curl -o ~/.wsltUpdate https://github.com/DeicPro/WSLT/blob/master/update.txt >/dev/null 2>&1
+    curl -o ~/.wsltUpdate https://raw.githubusercontent.com/DeicPro/WSLT/master/update.txt >/dev/null 2>&1
     . ~/.wsltUpdate
     if [ ! "$wsltLastVersion" == "$wsltVersion" ]; then
         echo "$wsltNewVersion: $wsltLastVersion. $wsltUpdating..."
