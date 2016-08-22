@@ -1,7 +1,6 @@
 #!/bin/bash
 #WSL Tools
 wsltVersion="v0.0.0.1"
-#sh /mnt/c/Users/Otros/Documentos/ubuntu/wslt
 
 #CONFIG
 wsltConfig(){
@@ -9,7 +8,7 @@ wsltConfig(){
     
     #UPDATE
     echo "$wsltCheckUpdate..."
-    curl -o ~/.wsltUpdate http:// >/dev/null 2>&1
+    curl -o ~/.wsltUpdate https://github.com/DeicPro/WSLT/blob/master/update.txt >/dev/null 2>&1
     . ~/.wsltUpdate
     if [ ! "$wsltLastVersion" == "$wsltVersion" ]; then
         echo "$wsltNewVersion: $wsltLastVersion. $wsltUpdating..."
