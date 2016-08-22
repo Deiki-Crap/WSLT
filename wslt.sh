@@ -4,8 +4,6 @@ wsltVersion="v0.0.0.1"
 
 #CONFIG
 wsltConfig(){
-    wsltLanguageMenu
-    
     #UPDATE
     echo "$wsltCheckUpdate..."
     curl -o ~/.wsltUpdate https://github.com/DeicPro/WSLT/blob/master/update.txt >/dev/null 2>&1
@@ -17,7 +15,7 @@ wsltConfig(){
         echo "$wsltUpdated. $wsltRunThisWith \\e[35mwslt\\e[0m $wsltNow."
         exit
     fi
-    echo "$wsltNoUpdates."
+    echo "$wsltNoUpdate."
     
     #INSTALL
     if [ ! -f /bin/wslt ]; then
@@ -25,9 +23,6 @@ wsltConfig(){
         cp -f $(dirname $0)/$(basename $0) /bin/wslt
         echo -e "$wsltInstalled. $wsltRunThisWith \\e[35mwslt\\e[0m $wsltNow."
         exit
-    fi
-    if [ ! -f ~/.wsltConf ]; then
-        echo "wsltLanguage=default" >> ~/.wsltConf
     fi
     . ~/.wsltConf
 
@@ -39,6 +34,7 @@ wsltConfig(){
     wsltUpdated="Updated"
     wsltRunThisWith"Run this program with"
     wsltNow="Now"
+    wsltNoUpdate="You have the lastest version already"
     wsltInstalling="Installing"
     wsltInstalled="Installed"
     wsltMainTittle="Windows Subsystem for Linux's Tools"
@@ -66,6 +62,7 @@ wsltConfig(){
         wsltUpdated="Actualizado"
         wsltRunThisWith"Ejecuta este programa con"
         wsltNow="Ahora"
+        wsltNoUpdate="Tienes la versión más reciente"
         wsltInstalling="Instalando"
         wsltInstalled="Instalado"
         wsltMainTittle="Herramientas de subsistema Windows para Linux"
@@ -225,4 +222,11 @@ wsltLanguageMenu(){
         esac
     done
 }
+
+#INITIAL
+if [ ! -f ~/.wsltConf ]; then
+    echo "wsltLanguage=default" >> ~/.wsltConf
+    . ~/.wsltConf
+    wsltLanguageMenu
+fi
 wsltConfig
