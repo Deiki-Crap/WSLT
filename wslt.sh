@@ -2,38 +2,15 @@
 #WSL Tools
 wsltVersion="v0.0.0.1"
 
-#CONFIG
-wsltConfig(){
-    #UPDATE
-    echo "$wsltCheckUpdate..."
-    curl -o ~/.wsltUpdate https://raw.githubusercontent.com/DeicPro/WSLT/master/update.txt >/dev/null 2>&1
-    . ~/.wsltUpdate
-    if [ ! "$wsltLastVersion" == "$wsltVersion" ]; then
-        echo "$wsltNewVersion: $wsltLastVersion. $wsltUpdating..."
-        curl -o ~/.wslt $wsltDownloadUrl >/dev/null 2>&1
-        cp -f ~/.wslt /bin/wslt
-        echo "$wsltUpdated. $wsltRunThisWith \\e[35mwslt\\e[0m $wsltNow."
-        exit
-    fi
-    echo "$wsltNoUpdate."
-    
-    #INSTALL
-    if [ ! -f /bin/wslt ]; then
-        echo "$wsltInstalling wslt..."
-        cp -f $(dirname $0)/$(basename $0) /bin/wslt
-        echo -e "$wsltInstalled. $wsltRunThisWith \\e[35mwslt\\e[0m $wsltNow."
-        exit
-    fi
-    . ~/.wsltConf
-
-    #LANGUAGES
+#LANGUAGES
+wsltLanguages(){
     #default
-    wsltCheckUpdates="Checking for update"
+    wsltCheckUpdate="Checking for update"
     wsltVersionFound="New version found"
     wsltUpdating="Updating"
     wsltUpdated="Updated"
-    wsltRunThisWith"Run this program with"
-    wsltNow="Now"
+    wsltRunThisWith="Run this program with"
+    wsltNow="now"
     wsltNoUpdate="You have the lastest version already"
     wsltInstalling="Installing"
     wsltInstalled="Installed"
@@ -54,14 +31,15 @@ wsltConfig(){
     wsltNo="No"
     wsltUninstallWSLT="Uninstalling wslt"
     wsltUninstalled="Uninstalled"
+
     #esES
     if [ "$wsltLanguage" == esES ]; then
-        wsltCheckUpdates="Buscando actualización"
+        wsltCheckUpdate="Buscando actualización"
         wsltVersionFound="Nueva versión encontrada"
         wsltUpdating="Actualizando"
         wsltUpdated="Actualizado"
-        wsltRunThisWith"Ejecuta este programa con"
-        wsltNow="Ahora"
+        wsltRunThisWith="Ejecuta este programa con"
+        wsltNow="ahora"
         wsltNoUpdate="Tienes la versión más reciente"
         wsltInstalling="Instalando"
         wsltInstalled="Instalado"
@@ -79,9 +57,38 @@ wsltConfig(){
         wsltWantInstall="¿Quieres descargar e instalar"
         wsltOptional="Opcional"
         wsltYes="Si"
-        WsltNo="No"
+        wsltNo="No"
         wsltUninstallWSLT="Desinstalando wslt"
         wsltUninstalled="Desinstalado"
+    fi
+}
+
+#CONFIG
+wsltConfig(){
+    wsltFirstRun=0
+    . ~/.wsltConf
+    wsltLanguages
+
+    #UPDATE
+    echo "$wsltCheckUpdate..."
+    curl -o ~/.wsltUpdate https://raw.githubusercontent.com/DeicPro/WSLT/master/update.txt >/dev/null 2>&1
+    . ~/.wsltUpdate
+    if [ "$wsltLastVersion" ]&&[ ! "$wsltLastVersion" == "$wsltVersion" ]; then
+        echo "$wsltNewVersion: $wsltLastVersion. $wsltUpdating..."
+        curl -o ~/.wslt $wsltDownloadUrl >/dev/null 2>&1
+        cp -f ~/.wslt /bin/wslt
+        echo "$wsltUpdated. $wsltRunThisWith \\e[35mwslt\\e[0m $wsltNow."
+        exit
+    fi
+    echo "$wsltNoUpdate."
+    sleep 0.75
+    
+    #INSTALL
+    if [ ! -f /bin/wslt ]; then
+        echo "$wsltInstalling wslt..."
+        cp -f $(dirname $0)/$(basename $0) /bin/wslt
+        echo -e "$wsltInstalled. $wsltRunThisWith \\e[35mwslt\\e[0m $wsltNow."
+        exit
     fi
     wsltMainMenu
 }
@@ -104,10 +111,10 @@ wsltMainMenu(){
         read i
         case $i in
             1)
-                wsltTweaksMenu
+                #wsltTweaksMenu
             ;;
             2)
-                wsltDEMenu
+                #wsltDEMenu
             ;;
             3)
                 wsltSettingsMenu
@@ -122,6 +129,7 @@ wsltMainMenu(){
     done
 }
 wsltTweaksMenu(){
+    #TODO
     if [ ! "$(grep "export DISPLAY=:0.0" ~/.bashrc)" ]; then
     echo "export DISPLAY=:0.0" >> ~/.bashrc
     elif [ ! "$(grep "<listen>tcp:host=localhost,port=0</listen>" /etc/dbus-1/session.conf)" ]; then
@@ -129,6 +137,7 @@ wsltTweaksMenu(){
     fi
 }
 wsltDEMenu(){
+    #TODO
     echo " $wsltWantInstall compizconfig-settings-manager? ($wsltOptional)"
     echo "  [1] $wsltYes"
     echo "  [2] $wsltNo"
@@ -144,7 +153,7 @@ wsltDEMenu(){
     apt-get -y install ubuntu-desktop unity $wsltCCSM
 }
 wsltSettingsMenu(){
-    while :; do
+    while clear; do
         echo -e " \\e[35m~$wsltSettingsTittle\\e[0m"
         echo "  [1] $wsltLanguageTittle"
         echo "  [2] $wsltUninstall"
@@ -183,7 +192,7 @@ wsltLanguageMenu(){
         #echo "  [*] Language"
         echo "  [1] English"
         echo "  [2] Español"
-        if [ -f ~/.wsltConf ]; then
+        if [ "$wsltFirstRun" == 0 ]; then
             echo ""
             echo "  [B] $wsltBack"
             echo ""
@@ -205,16 +214,18 @@ wsltLanguageMenu(){
                 wsltConfig
             ;;
             b|B)
-                if [ -f ~/.wsltConf ]; then
+                if [ "$wsltFirstRun" == 1 ]; then
+                    echo "$wsltInvalidOption."
+                else
                     break
                 fi
-                echo "$wsltInvalidOption."
             ;;
             e|E)
-                if [ -f ~/.wsltConf ]; then
+                if [ "$wsltFirstRun" == 1 ]; then
+                    echo "$wsltInvalidOption."
+                else
                     exit
                 fi
-                echo "$wsltInvalidOption."
             ;;
             *)
                 echo "$wsltInvalidOption."
@@ -225,8 +236,10 @@ wsltLanguageMenu(){
 
 #INITIAL
 if [ ! -f ~/.wsltConf ]; then
-    echo "wsltLanguage=default" >> ~/.wsltConf
-    . ~/.wsltConf
+    wsltFirstRun="1"
+    echo "wsltLanguage=default" > ~/.wsltConf
+    wsltLanguages
     wsltLanguageMenu
+else
+    wsltConfig
 fi
-wsltConfig
