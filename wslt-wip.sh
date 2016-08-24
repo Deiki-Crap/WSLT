@@ -1,6 +1,6 @@
 #!/bin/bash
 #WSL Tools
-wsltVersion="v0.0.0.1"
+wsltVersion="v0.0.0.1-wip"
 
 #LANGUAGES
 wsltLanguages(){
